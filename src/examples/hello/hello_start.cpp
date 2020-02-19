@@ -53,7 +53,6 @@ static int daemon_task;             /* Handle of deamon task / thread */
 extern "C" __EXPORT int hello_main(int argc, char *argv[]);
 int hello_main(int argc, char *argv[])
 {
-
 	if (argc < 2) {
 		PX4_WARN("usage: hello {start|stop|status}\n");
 		return 1;
