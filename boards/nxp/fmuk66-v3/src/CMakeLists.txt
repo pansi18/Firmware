@@ -31,7 +31,7 @@
 #
 ############################################################################
 
-px4_add_library(drivers_board
+add_library(drivers_board
 	autoleds.c
 	automount.c
 	can.c
@@ -39,7 +39,7 @@ px4_add_library(drivers_board
 	led.c
 	sdhc.c
 	spi.c
-	timer_config.c
+	timer_config.cpp
 	usb.c
 )
 

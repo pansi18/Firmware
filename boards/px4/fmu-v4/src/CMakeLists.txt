@@ -31,12 +31,12 @@
 #
 ############################################################################
 
-px4_add_library(drivers_board
+add_library(drivers_board
 	can.c
 	init.c
 	led.c
 	spi.c
-	timer_config.c
+	timer_config.cpp
 	usb.c
 )
 
@@ -46,4 +46,5 @@ target_link_libraries(drivers_board
 		nuttx_arch # sdio
 		nuttx_drivers # sdio
 		px4_layer
+		arch_io_pins
 )

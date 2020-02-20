@@ -58,6 +58,7 @@ public:
 	void update_mc_state() override;
 	void update_fw_state() override;
 	void waiting_on_tecs() override;
+	float thrust_compensation_for_tilt();
 
 private:
 
@@ -75,7 +76,7 @@ private:
 		param_t front_trans_dur_p2;
 	} _params_handles_tiltrotor;
 
-	enum vtol_mode {
+	enum class vtol_mode {
 		MC_MODE = 0,			/**< vtol is in multicopter mode */
 		TRANSITION_FRONT_P1,	/**< vtol is in front transition part 1 mode */
 		TRANSITION_FRONT_P2,	/**< vtol is in front transition part 2 mode */

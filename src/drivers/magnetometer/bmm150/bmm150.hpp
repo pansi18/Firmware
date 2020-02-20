@@ -1,7 +1,7 @@
 #ifndef BMM150_HPP_
 #define BMM150_HPP_
 
-#include <px4_config.h>
+#include <px4_platform_common/px4_config.h>
 
 #include <sys/types.h>
 #include <stdint.h>
@@ -16,11 +16,11 @@
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
-#include <px4_log.h>
+#include <px4_platform_common/log.h>
 
 #include <perf/perf_counter.h>
 #include <systemlib/err.h>
-#include <nuttx/wqueue.h>
+#include <px4_platform_common/px4_work_queue/ScheduledWorkItem.hpp>
 #include <systemlib/conversions.h>
 
 #include <nuttx/arch.h>
@@ -191,7 +191,7 @@ struct bmm150_data {
 };
 
 
-class BMM150 : public device::I2C
+class BMM150 : public device::I2C, public px4::ScheduledWorkItem
 {
 public:
 	BMM150(int bus, const char *path, enum Rotation rotation);
@@ -217,7 +217,6 @@ protected:
 	virtual int       probe();
 
 private:
-	work_s            _work{};
 
 	bool _running;
 
@@ -225,7 +224,7 @@ private:
 	unsigned        _call_interval;
 
 
-	mag_report _report {};
+	sensor_mag_s _report {};
 	ringbuffer::RingBuffer  *_reports;
 
 	bool            _collect_phase;
@@ -266,7 +265,7 @@ private:
 	enum Rotation       _rotation;
 	bool            _got_duplicate;
 
-	mag_report   _last_report {};          /**< used for info() */
+	sensor_mag_s   _last_report {};          /**< used for info() */
 
 	int             init_trim_registers(void);
 
@@ -278,8 +277,7 @@ private:
 	int     measure(); //start measure
 	int     collect(); //get results and publish
 
-	static void     cycle_trampoline(void *arg);
-	void            cycle(); //main execution
+	void	Run() override;
 
 	/**
 	 * Read the specified number of bytes from BMM150.

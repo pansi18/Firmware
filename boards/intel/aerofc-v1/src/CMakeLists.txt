@@ -32,11 +32,11 @@
 #
 ############################################################################
 
-px4_add_library(drivers_board
+add_library(drivers_board
 	init.c
 	led.c
 	spi.c
-	timer_config.c
+	timer_config.cpp
 )
 target_link_libraries(drivers_board
 	PRIVATE

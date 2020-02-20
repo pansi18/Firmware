@@ -7,7 +7,8 @@
 # @board px4_fmu-v4 exclude
 # @board px4_fmu-v4pro exclude
 # @board px4_fmu-v5 exclude
-# @board aerofc-v1 exclude
+# @board px4_fmu-v5x exclude
+# @board intel_aerofc-v1 exclude
 #
 # @type Quadrotor x
 # @class Copter
@@ -16,7 +17,7 @@
 #
 sh /etc/init.d/rc.mc_defaults
 
-set MIXER quad_x
+set MIXER quad_x_cw
 set PWM_OUT 1234
 if [ $AUTOCNF = yes ]
 then

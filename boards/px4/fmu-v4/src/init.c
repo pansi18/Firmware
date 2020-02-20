@@ -32,7 +32,7 @@
  ****************************************************************************/
 
 /**
- * @file px4fmu_init.c
+ * @file init.c
  *
  * PX4FMU-specific early startup code.  This file implements the
  * board_app_initialize() function that is called early by nsh during startup.
@@ -45,8 +45,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <px4_config.h>
-#include <px4_tasks.h>
+#include <px4_platform_common/px4_config.h>
+#include <px4_platform_common/tasks.h>
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -73,7 +73,11 @@
 
 #include <systemlib/px4_macros.h>
 
-#include <px4_init.h>
+#include <px4_platform_common/init.h>
+#include <px4_platform/board_dma_alloc.h>
+
+#include <drivers/drv_pwm_output.h>
+#include <px4_arch/io_timer.h>
 
 /****************************************************************************
  * Pre-Processor Definitions
@@ -140,12 +144,9 @@ __EXPORT void board_peripheral_reset(int ms)
 __EXPORT void board_on_reset(int status)
 {
 	// Configure the GPIO pins to outputs and keep them low.
-	stm32_configgpio(GPIO_GPIO0_OUTPUT);
-	stm32_configgpio(GPIO_GPIO1_OUTPUT);
-	stm32_configgpio(GPIO_GPIO2_OUTPUT);
-	stm32_configgpio(GPIO_GPIO3_OUTPUT);
-	stm32_configgpio(GPIO_GPIO4_OUTPUT);
-	stm32_configgpio(GPIO_GPIO5_OUTPUT);
+	for (int i = 0; i < DIRECT_PWM_OUTPUT_CHANNELS; ++i) {
+		px4_arch_configgpio(io_timer_channel_get_gpio_output(i));
+	}
 
 	/**
 	 * On resets invoked from system (not boot) insure we establish a low
@@ -323,7 +324,6 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	SPI_SETFREQUENCY(spi1, 10000000);
 	SPI_SETBITS(spi1, 8);
 	SPI_SETMODE(spi1, SPIDEV_MODE3);
-	SPI_SELECT(spi1, PX4_SPIDEV_GYRO, false);
 	SPI_SELECT(spi1, PX4_SPIDEV_HMC, false);
 	SPI_SELECT(spi1, PX4_SPIDEV_MPU, false);
 	up_udelay(20);
